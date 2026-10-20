@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "927849652",
+    "project_id": "aifridge-7b323",
+    "storage_bucket": "aifridge-7b323.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927849652:android:b518faa8ddbd7aae830be1",
+        "android_client_info": {
+          "package_name": "cat.institutmarianao.aifridge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZzbfNEa1rE_u0eunACcF18FpZLpefsVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
