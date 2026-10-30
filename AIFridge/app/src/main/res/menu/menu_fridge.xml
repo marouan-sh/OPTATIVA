@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- ✨ Generar receta con Gemini -->
+    <item
+        android:id="@+id/action_generate_recipe"
+        android:icon="@drawable/ic_auto_awesome"
+        android:title="Generate recipe"
+        app:showAsAction="ifRoom" />
+
+    <!-- Cerrar sesión -->
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        app:showAsAction="ifRoom" />
+
+</menu>

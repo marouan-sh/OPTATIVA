@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFridge">
         <activity
-            android:name=".item_Ingredient"
+            android:name=".Recipe_Activity"
             android:exported="false" />
         <activity
             android:name=".fridge_Activity"
