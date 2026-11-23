@@ -47,7 +47,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
 
     // Firebase (la BoM elige las versiones de todas las librerías de Firebase)
-    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    // 34.19.0 es la última compatible con el Kotlin 2.2 de Android Studio (la 35 necesita Kotlin 2.4)
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
