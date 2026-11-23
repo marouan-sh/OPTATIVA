@@ -13,7 +13,8 @@
         android:theme="@style/Theme.AIFridge">
         <activity
             android:name=".Recipe_Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Suggest a Recipe" />
         <activity
             android:name=".fridge_Activity"
             android:exported="false" />

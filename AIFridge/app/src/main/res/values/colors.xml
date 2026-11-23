@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Colores de marca de AIFridge -->
+    <color name="brand_primary">#FF6750A4</color>
+    <color name="brand_primary_container">#FFEADDFF</color>
+    <color name="brand_on_primary_container">#FF21005D</color>
 </resources>

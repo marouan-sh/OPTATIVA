@@ -1,0 +1,33 @@
+rules_version = '2';
+
+// Reglas de seguridad de AIFridge.
+// Copia este contenido en la consola de Firebase: Firestore Database → Reglas → Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Cada usuario solo puede leer y escribir SUS ingredientes,
+    // y solo si ha iniciado sesión con el email verificado.
+    match /users/{userId}/ingredients/{ingredientId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId) && isValidIngredient();
+    }
+
+    // Todo lo demás está prohibido.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isOwner(userId) {
+      return request.auth != null
+        && request.auth.uid == userId
+        && request.auth.token.email_verified == true;
+    }
+
+    // Comprueba que los datos tienen el formato correcto (nombre y cantidad obligatorios).
+    function isValidIngredient() {
+      let data = request.resource.data;
+      return data.name is string && data.name.size() > 0
+        && data.quantity is int && data.quantity > 0;
+    }
+  }
+}

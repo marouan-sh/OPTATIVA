@@ -1,14 +1,71 @@
 package cat.institutmarianao.aifridge
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import cat.institutmarianao.aifridge.data.AuthRepository
+import cat.institutmarianao.aifridge.data.FormValidator
+import cat.institutmarianao.aifridge.databinding.ActivityRegisterBinding
 
 class register_Activity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityRegisterBinding
+    private val authRepository = AuthRepository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.registerButton.setOnClickListener { register() }
+    }
+
+    private fun register() {
+        val email = binding.registerEmailEditText.text.toString().trim()
+        val password = binding.registerPasswordEditText.text.toString()
+        val confirmPassword = binding.confirmPasswordEditText.text.toString()
+
+        if (!validateForm(email, password, confirmPassword)) return
+
+        setLoading(true)
+        binding.registerErrorTextView.visibility = View.GONE
+
+        authRepository.register(email, password) { result ->
+            setLoading(false)
+            result
+                .onSuccess {
+                    // Cuenta creada: volvemos al login para que verifique el email y entre
+                    Toast.makeText(
+                        this,
+                        "Account created. We've sent a verification email to $email",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    finish()
+                }
+                .onFailure { showError(it.message ?: "Error on register") }
+        }
+    }
+
+    /** Valida TODOS los campos a la vez. No borra lo que ha escrito el usuario. */
+    private fun validateForm(email: String, password: String, confirmPassword: String): Boolean {
+        val emailError = FormValidator.validateEmail(email)
+        val passwordError = FormValidator.validateNewPassword(password)
+        val confirmError = FormValidator.validatePasswordConfirmation(password, confirmPassword)
+
+        binding.registerEmailLayout.error = emailError
+        binding.registerPasswordLayout.error = passwordError
+        binding.confirmPasswordLayout.error = confirmError
+
+        return emailError == null && passwordError == null && confirmError == null
+    }
+
+    private fun showError(message: String) {
+        binding.registerErrorTextView.text = message
+        binding.registerErrorTextView.visibility = View.VISIBLE
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        binding.registerButton.isEnabled = !isLoading
     }
 }

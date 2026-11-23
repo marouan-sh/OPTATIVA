@@ -42,10 +42,10 @@ Práctica del módulo optativo **A1-P · Backend al núvol** del CFGS **DAM** en
 
 | Pantalla | Activity | Layout |
 |---|---|---|
-| Login | `LoginActivity` | `activity_login.xml` |
-| Registro | `RegisterActivity` | `activity_register.xml` |
-| Nevera | `FridgeActivity` | `activity_fridge.xml` + `item_ingredient.xml` |
-| Receta | `RecipeActivity` | `activity_recipe.xml` |
+| Login | `login_Activity` | `activity_login.xml` |
+| Registro | `register_Activity` | `activity_register.xml` |
+| Nevera | `fridge_Activity` | `activity_fridge.xml` + `item_ingredient.xml` |
+| Receta | `Recipe_Activity` | `activity_recipe.xml` |
 
 <!-- Añade aquí tus capturas:
 | Login | Registro | Nevera | Receta |
@@ -116,14 +116,14 @@ service cloud.firestore {
 
 ## ✅ Estado
 
-- [ ] Login con validación y errores de Firebase
-- [ ] Registro con validación y confirmación de contraseña
-- [ ] Verificación de email (ampliación)
-- [ ] CRUD de ingredientes en Firestore
-- [ ] Borrado con diálogo de confirmación
+- [x] Login con validación y errores de Firebase
+- [x] Registro con validación y confirmación de contraseña
+- [x] Verificación de email (ampliación)
+- [x] CRUD de ingredientes en Firestore
+- [x] Borrado con diálogo de confirmación
 - [ ] Generación de receta con Gemini
 - [ ] Pantalla de receta con Markwon
-- [ ] Layout adaptado a horizontal
+- [x] Layout adaptado a horizontal
 
 ---
 
