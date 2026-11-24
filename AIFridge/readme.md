@@ -96,13 +96,15 @@ service cloud.firestore {
 
 ## 🛡️ App Check
 
-La app usa **Firebase App Check** con el proveedor *debug* (`AIFridgeApp.kt`): cada llamada a la IA lleva un token que demuestra que viene de esta app.
+La IA está protegida con **Firebase App Check** (modo **Aplicado**): Firebase solo acepta llamadas a la IA que llevan un token válido de esta app. La app usa el proveedor *debug* (`AIFridgeApp.kt`), pensado para emuladores y desarrollo.
 
-En la consola, App Check está en modo **No aplicado** para Firebase AI Logic, para que la práctica se pueda probar en cualquier ordenador sin registrar tokens. Para aplicarlo:
+**Para probar la IA en otro ordenador** hay que registrar el token debug de ese emulador:
 
-1. Ejecutar la app y copiar el token debug de Logcat (buscar `DebugAppCheckProvider`).
-2. Registrarlo en *App Check → Apps → ⋮ → Administrar tokens de depuración*.
-3. Cambiar Firebase AI Logic a **Aplicado** en *App Check → APIs*.
+1. Ejecutar la app y buscar en Logcat `DebugAppCheckProvider`. Sale una línea como:
+   `Enter this debug secret into the allow list in the Firebase Console for your project: 123a4567-...`
+2. Registrar ese código en la consola: *App Check → Apps → ⋮ → Administrar tokens de depuración*.
+
+Sin ese registro, login, registro y nevera funcionan con normalidad, pero la generación de recetas devuelve un error de App Check.
 
 ---
 
@@ -120,7 +122,7 @@ En la consola, App Check está en modo **No aplicado** para Firebase AI Logic, p
    - **Authentication** → proveedor *Email/Password*
    - **Firestore Database** (y pega las reglas de arriba)
    - **AI Logic** → *Gemini Developer API*
-   - **App Check** → pestaña *APIs* → Firebase AI Logic en modo **No aplicado** (ver abajo)
+   - **App Check** → registrar el token debug del emulador (ver abajo)
 5. Abre el proyecto en Android Studio, sincroniza Gradle y ejecuta.
 
 > ⚠️ El archivo `google-services.json` no está en el repositorio por seguridad.
