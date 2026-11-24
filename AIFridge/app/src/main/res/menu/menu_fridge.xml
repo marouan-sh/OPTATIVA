@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- ✨ Generar receta con Gemini -->
+    <!-- ✨ Generar receta con IA -->
     <item
         android:id="@+id/action_generate_recipe"
         android:icon="@drawable/ic_auto_awesome"

@@ -113,26 +113,9 @@ class fridge_Activity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    /**
-     * TODO (IA): lo implementas tú.
-     *
-     * 1. Ingredientes: ya los tienes en adapter.currentList (el listener los mantiene al día),
-     *    así no hace falta volver a pedirlos a Firestore.
-     * 2. Mostrar el diálogo "Generating Recipe" (no cancelable).
-     * 3. Llamar a Gemini (Firebase AI Logic) con el prompt del enunciado, de forma asíncrona
-     *    (nunca en el hilo principal). Idea: una clase data/RecipeRepository.
-     * 4. Cerrar el diálogo y abrir la receta:
-     *        val intent = Intent(this, Recipe_Activity::class.java)
-     *        intent.putExtra(Recipe_Activity.EXTRA_RECIPE, recipeText)
-     *        startActivity(intent)
-     */
+    /** Botón ✨ del menú: generar una receta con la IA de Firebase. */
     private fun generateRecipe() {
-        val ingredients = adapter.currentList
-        if (ingredients.isEmpty()) {
-            showMessage("Add some ingredients first")
-            return
-        }
-        showMessage("Recipe generation not implemented yet")
+        // TODO: implementar la IA de Firebase
     }
 
     // ---------- Spinners ----------
