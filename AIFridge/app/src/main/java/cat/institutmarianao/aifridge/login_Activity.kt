@@ -18,7 +18,7 @@ class login_Activity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Si ya hay sesión iniciada (y verificada), se salta el login
+        // Si ya hay sesión iniciada, se salta el login
         if (authRepository.isLoggedIn()) {
             goToFridge()
             return

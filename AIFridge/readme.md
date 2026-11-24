@@ -118,7 +118,6 @@ service cloud.firestore {
 
 - [x] Login con validación y errores de Firebase
 - [x] Registro con validación y confirmación de contraseña
-- [x] Verificación de email (ampliación)
 - [x] CRUD de ingredientes en Firestore
 - [x] Borrado con diálogo de confirmación
 - [ ] Generación de receta con Gemini

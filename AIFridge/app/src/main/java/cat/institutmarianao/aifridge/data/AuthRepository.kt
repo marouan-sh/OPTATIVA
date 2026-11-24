@@ -15,24 +15,17 @@ class AuthRepository {
     val currentUser: FirebaseUser?
         get() = auth.currentUser
 
-    /** Hay sesión iniciada y el email está verificado. */
-    fun isLoggedIn(): Boolean = auth.currentUser?.isEmailVerified == true
+    /** Hay una sesión iniciada. */
+    fun isLoggedIn(): Boolean = auth.currentUser != null
 
-    /**
-     * Inicia sesión. Si el email todavía no está verificado, se cierra la sesión
-     * y se devuelve un error para que el usuario lo verifique primero.
-     */
     fun login(email: String, password: String, onResult: (Result<FirebaseUser>) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 val user = authResult.user
-                when {
-                    user == null -> onResult(Result.failure(Exception("Error on login")))
-                    !user.isEmailVerified -> {
-                        auth.signOut()
-                        onResult(Result.failure(Exception(EMAIL_NOT_VERIFIED_MESSAGE)))
-                    }
-                    else -> onResult(Result.success(user))
+                if (user != null) {
+                    onResult(Result.success(user))
+                } else {
+                    onResult(Result.failure(Exception("Error on login")))
                 }
             }
             .addOnFailureListener { exception ->
@@ -41,26 +34,16 @@ class AuthRepository {
             }
     }
 
-    /**
-     * Crea la cuenta y envía el email de verificación.
-     * Después cierra la sesión: el usuario tendrá que verificar el email y hacer login.
-     */
-    fun register(email: String, password: String, onResult: (Result<Unit>) -> Unit) {
+    /** Crea la cuenta. Firebase inicia la sesión automáticamente al crearla. */
+    fun register(email: String, password: String, onResult: (Result<FirebaseUser>) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 val user = authResult.user
-                if (user == null) {
+                if (user != null) {
+                    onResult(Result.success(user))
+                } else {
                     onResult(Result.failure(Exception("Error on register")))
-                    return@addOnSuccessListener
                 }
-                user.sendEmailVerification()
-                    .addOnCompleteListener { task ->
-                        if (!task.isSuccessful) {
-                            Log.w(TAG, "Verification email could not be sent", task.exception)
-                        }
-                        auth.signOut()
-                        onResult(Result.success(Unit))
-                    }
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Register failed", exception)
@@ -74,7 +57,5 @@ class AuthRepository {
 
     companion object {
         private const val TAG = "AuthRepository"
-        const val EMAIL_NOT_VERIFIED_MESSAGE =
-            "Please verify your email before logging in. Check your inbox."
     }
 }

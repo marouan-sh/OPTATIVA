@@ -5,8 +5,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Cada usuario solo puede leer y escribir SUS ingredientes,
-    // y solo si ha iniciado sesión con el email verificado.
+    // Cada usuario solo puede leer y escribir SUS ingredientes.
     match /users/{userId}/ingredients/{ingredientId} {
       allow read, delete: if isOwner(userId);
       allow create, update: if isOwner(userId) && isValidIngredient();
@@ -19,8 +18,7 @@ service cloud.firestore {
 
     function isOwner(userId) {
       return request.auth != null
-        && request.auth.uid == userId
-        && request.auth.token.email_verified == true;
+        && request.auth.uid == userId;
     }
 
     // Comprueba que los datos tienen el formato correcto (nombre y cantidad obligatorios).

@@ -1,8 +1,8 @@
 package cat.institutmarianao.aifridge
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cat.institutmarianao.aifridge.data.AuthRepository
 import cat.institutmarianao.aifridge.data.FormValidator
@@ -34,15 +34,7 @@ class register_Activity : AppCompatActivity() {
         authRepository.register(email, password) { result ->
             setLoading(false)
             result
-                .onSuccess {
-                    // Cuenta creada: volvemos al login para que verifique el email y entre
-                    Toast.makeText(
-                        this,
-                        "Account created. We've sent a verification email to $email",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    finish()
-                }
+                .onSuccess { goToFridge() }
                 .onFailure { showError(it.message ?: "Error on register") }
         }
     }
@@ -67,5 +59,12 @@ class register_Activity : AppCompatActivity() {
 
     private fun setLoading(isLoading: Boolean) {
         binding.registerButton.isEnabled = !isLoading
+    }
+
+    private fun goToFridge() {
+        val intent = Intent(this, fridge_Activity::class.java)
+        // Borra el login y el registro del historial: al pulsar "atrás" en la nevera, la app se cierra
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }
