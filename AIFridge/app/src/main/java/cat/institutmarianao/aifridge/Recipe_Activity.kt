@@ -9,7 +9,7 @@ import cat.institutmarianao.aifridge.databinding.ActivityRecipeBinding
 import io.noties.markwon.Markwon
 
 /**
- * Muestra la receta generada por la IA.
+ * Muestra la receta generada por la IA de Firebase.
  * Recibe el texto en Markdown con el extra EXTRA_RECIPE y lo pinta con Markwon.
  */
 class Recipe_Activity : AppCompatActivity() {

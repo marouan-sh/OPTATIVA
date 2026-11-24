@@ -7,22 +7,27 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import cat.institutmarianao.aifridge.data.AuthRepository
 import cat.institutmarianao.aifridge.data.DateUtils
 import cat.institutmarianao.aifridge.data.FormValidator
 import cat.institutmarianao.aifridge.data.IngredientRepository
+import cat.institutmarianao.aifridge.data.RecipeRepository
 import cat.institutmarianao.aifridge.data.item_Ingredient
 import cat.institutmarianao.aifridge.databinding.ActivityFridgeBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class fridge_Activity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFridgeBinding
     private val authRepository = AuthRepository()
+    private val recipeRepository = RecipeRepository()
     private lateinit var ingredientRepository: IngredientRepository
     private lateinit var adapter: IngredientAdapter
 
@@ -34,6 +39,9 @@ class fridge_Activity : AppCompatActivity() {
 
     /** Fecha elegida en el DatePicker (null = sin fecha de caducidad). */
     private var selectedExpiration: Date? = null
+
+    /** Diálogo "Generating Recipe" mientras la IA responde (null = no se está generando). */
+    private var progressDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,9 +121,51 @@ class fridge_Activity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    /** Botón ✨ del menú: generar una receta con la IA de Firebase. */
+    /**
+     * Botón ✨ del menú: pide a la IA una receta con los ingredientes de la nevera.
+     *
+     * Los ingredientes ya están en adapter.currentList (el listener de Firestore los mantiene
+     * al día), así que no hace falta volver a pedirlos a Firestore.
+     */
     private fun generateRecipe() {
-        // TODO: implementar la IA de Firebase
+        val ingredients = adapter.currentList
+        if (ingredients.isEmpty()) {
+            showMessage("Add some ingredients first")
+            return
+        }
+
+        progressDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Generating Recipe")
+            .setMessage("Please wait while Gemini generates a recipe suggestion for you...")
+            .setCancelable(false)
+            .show()
+
+        // Corrutina: espera a la IA sin bloquear la pantalla.
+        // Si se cierra la Activity, se cancela sola.
+        lifecycleScope.launch {
+            val result = recipeRepository.generateRecipe(ingredients)
+            dismissProgressDialog()
+
+            result
+                .onSuccess { recipeText -> openRecipe(recipeText) }
+                .onFailure { showMessage("Error generating recipe: ${it.message}") }
+        }
+    }
+
+    private fun openRecipe(recipeText: String) {
+        val intent = Intent(this, Recipe_Activity::class.java)
+        intent.putExtra(Recipe_Activity.EXTRA_RECIPE, recipeText)
+        startActivity(intent)
+    }
+
+    private fun dismissProgressDialog() {
+        progressDialog?.dismiss()
+        progressDialog = null
+    }
+
+    override fun onDestroy() {
+        dismissProgressDialog() // evita dejar el diálogo "colgado" si se gira la pantalla
+        super.onDestroy()
     }
 
     // ---------- Spinners ----------

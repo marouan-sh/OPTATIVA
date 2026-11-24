@@ -94,6 +94,18 @@ service cloud.firestore {
 
 ---
 
+## 🛡️ App Check
+
+La app usa **Firebase App Check** con el proveedor *debug* (`AIFridgeApp.kt`): cada llamada a la IA lleva un token que demuestra que viene de esta app.
+
+En la consola, App Check está en modo **No aplicado** para Firebase AI Logic, para que la práctica se pueda probar en cualquier ordenador sin registrar tokens. Para aplicarlo:
+
+1. Ejecutar la app y copiar el token debug de Logcat (buscar `DebugAppCheckProvider`).
+2. Registrarlo en *App Check → Apps → ⋮ → Administrar tokens de depuración*.
+3. Cambiar Firebase AI Logic a **Aplicado** en *App Check → APIs*.
+
+---
+
 ## 🚀 Cómo ejecutarlo
 
 1. Clona el repositorio y entra en la carpeta de esta práctica:
@@ -107,7 +119,8 @@ service cloud.firestore {
 4. En Firebase activa:
    - **Authentication** → proveedor *Email/Password*
    - **Firestore Database** (y pega las reglas de arriba)
-   - **AI Logic** → API de Gemini
+   - **AI Logic** → *Gemini Developer API*
+   - **App Check** → pestaña *APIs* → Firebase AI Logic en modo **No aplicado** (ver abajo)
 5. Abre el proyecto en Android Studio, sincroniza Gradle y ejecuta.
 
 > ⚠️ El archivo `google-services.json` no está en el repositorio por seguridad.
@@ -120,8 +133,8 @@ service cloud.firestore {
 - [x] Registro con validación y confirmación de contraseña
 - [x] CRUD de ingredientes en Firestore
 - [x] Borrado con diálogo de confirmación
-- [ ] Generación de receta con Gemini
-- [ ] Pantalla de receta con Markwon
+- [x] Generación de receta con Gemini
+- [x] Pantalla de receta con Markwon
 - [x] Layout adaptado a horizontal
 
 ---
