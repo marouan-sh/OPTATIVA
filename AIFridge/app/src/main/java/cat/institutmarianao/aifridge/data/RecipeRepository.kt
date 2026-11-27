@@ -43,7 +43,12 @@ class RecipeRepository {
         }
     }
 
-    /** El prompt del enunciado, con una línea por ingrediente: "- 12 units Eggs". */
+    /**
+     * El prompt del enunciado, con una línea por ingrediente: "- 12 units Eggs".
+     *
+     * Se añaden unas reglas para que la receta sea corta y concreta: cuanto menos texto
+     * escribe la IA, antes responde.
+     */
     private fun buildPrompt(ingredients: List<item_Ingredient>): String {
         val ingredientList = ingredients.joinToString("\n") { ingredient ->
             listOfNotNull("-", ingredient.quantity.toString(), ingredient.unit, ingredient.name)
@@ -52,6 +57,11 @@ class RecipeRepository {
         return """
             |Suggest a simple recipe I can make with the following ingredients:
             |$ingredientList
+            |Rules:
+            |- Use only these ingredients plus basic pantry staples (salt, pepper, oil, water).
+            |- You don't need to use every ingredient: choose the ones that go well together.
+            |- Keep it short: at most 6 instruction steps, one or two sentences each.
+            |- Reply only with the recipe, without any introduction or final comments.
             |Please format the response using simple Markdown:
             |- Use a main heading for the recipe **Title**.
             |- Use subheadings like **Ingredients** and **Instructions** in bold.
