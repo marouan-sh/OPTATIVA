@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.RequestOptions
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
@@ -12,7 +13,11 @@ import kotlin.coroutines.cancellation.CancellationException
 class RecipeRepository {
 
     private val model = Firebase.ai(backend = GenerativeBackend.googleAI())
-        .generativeModel(MODEL_NAME)
+        .generativeModel(
+            modelName = MODEL_NAME,
+            // Si la IA no responde en 60 s, se corta y se muestra un error (por defecto son 180 s)
+            requestOptions = RequestOptions(timeoutInMillis = TIMEOUT_MILLIS)
+        )
 
     /**
      * Pide a la IA una receta con los ingredientes. Devuelve el texto en Markdown.
@@ -21,8 +26,10 @@ class RecipeRepository {
      */
     suspend fun generateRecipe(ingredients: List<item_Ingredient>): Result<String> {
         return try {
+            Log.d(TAG, "Requesting recipe from $MODEL_NAME with ${ingredients.size} ingredients")
             val response = model.generateContent(buildPrompt(ingredients))
             val text = response.text
+            Log.d(TAG, "Recipe received (${text?.length ?: 0} characters)")
             if (text.isNullOrBlank()) {
                 Result.failure(Exception("The AI returned an empty recipe"))
             } else {
@@ -56,5 +63,6 @@ class RecipeRepository {
     companion object {
         private const val TAG = "RecipeRepository"
         private const val MODEL_NAME = "gemini-3.5-flash"
+        private const val TIMEOUT_MILLIS = 60_000L
     }
 }
