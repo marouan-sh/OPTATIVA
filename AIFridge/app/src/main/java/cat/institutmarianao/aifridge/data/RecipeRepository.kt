@@ -15,7 +15,7 @@ class RecipeRepository {
     private val model = Firebase.ai(backend = GenerativeBackend.googleAI())
         .generativeModel(
             modelName = MODEL_NAME,
-            // Si la IA no responde en 60 s, se corta y se muestra un error (por defecto son 180 s)
+            // Si la IA no responde en 90 s, se corta y se muestra un error (por defecto son 180 s)
             requestOptions = RequestOptions(timeoutInMillis = TIMEOUT_MILLIS)
         )
 
@@ -62,7 +62,8 @@ class RecipeRepository {
 
     companion object {
         private const val TAG = "RecipeRepository"
-        private const val MODEL_NAME = "gemini-3.5-flash"
-        private const val TIMEOUT_MILLIS = 60_000L
+        // Flash-Lite: modelo ligero y rápido, suficiente para una receta sencilla
+        private const val MODEL_NAME = "gemini-3.5-flash-lite"
+        private const val TIMEOUT_MILLIS = 90_000L
     }
 }
